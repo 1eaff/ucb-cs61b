@@ -135,6 +135,7 @@ public class Model extends Observable {
      *    and the trailing tile does not.
      * */
     public boolean tilt(Side side) {
+        // BUG: 
         boolean changed;
         changed = false;
 
