@@ -94,29 +94,44 @@ public class Model extends Observable {
         setChanged();
     }
 
+    private int findDestination(int col, int tmpRow, int lastMerge, int val) {
+        // 1. If row out of range, return top place.
+        if (tmpRow == board.size()) { return tmpRow - 1; }
+
+        assert tmpRow >= 0 && tmpRow < board.size();
+
+        Tile destTile = board.tile(col, tmpRow);
+
+        // 2. Destination place has no tile, try upside again:
+        if (destTile == null) {
+            return findDestination(col, tmpRow + 1, lastMerge, val);
+        }
+        // 3. Destination place has tile, but has different value with tile:
+        if (destTile.value() != val) { return tmpRow - 1; }
+
+        // 4. Destination place has the same value tile, but has been merged:
+        if (lastMerge == tmpRow) { return tmpRow - 1; }
+
+        // 5. merge occurs
+        return tmpRow;
+    }
+
     private boolean tiltColumn(int col) {
         boolean flag = false;
-        int row_dest = 3;
-        for (int row = board.size() - 1; row >= 0; --row) {
+        int lastMerge = -1;
+        // iterate from top to down
+        for (int row = board.size() - 2; row >= 0; --row) {
             Tile tile = board.tile(col, row);
-            if (tile == null) {
-                continue;
-            }
 
-            for (int ix = row_dest; ix > row; --ix) {
-                Tile dest = board.tile(col, ix);
-                if (dest == null) {
-                    board.move(col, ix, tile);
-                    flag = true;
-                    break;
-                }
-                if (tile.value() == dest.value()) {
-                    board.move(col, ix, tile);
-                    score += (tile.value() * 2);
-                    row_dest = ix - 1;
-                    flag = true;
-                    break;
-                }
+            if (tile == null) { continue; }
+
+            int destRow = findDestination(col, row + 1, lastMerge, tile.value());
+            assert destRow >= 0 && destRow < board.size();
+            boolean isMerge = board.move(col, destRow, tile);
+            if (destRow != row) { flag = true; }
+            if (isMerge) {
+                lastMerge = destRow;
+                score += (tile.value() * 2);
             }
         }
         return flag;
