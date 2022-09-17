@@ -5,8 +5,14 @@ package DebugExercise;
  * Code adapted from https://stackoverflow.com/questions/4895173/bitwise-multiply-and-add-in-java and https://stackoverflow.com/questions/1533131/what-useful-bitwise-operator-code-tricks-should-a-developer-know-about
  */
 public class DebugExercise2 {
-    /** Returns the max of a and b. Do not step into this function. */
+
     public static int max(int a, int b) {
+        return (a > b) ? a : b;
+    }
+
+    /** Returns the max of a and b. Do not step into this function. */
+    /** BUG: */
+    public static int max2(int a, int b) {
         int w = (b - a) >> 31;
         /* If you're stepping into this function, click the
            step out button because you're not going to learn anything. */
@@ -58,7 +64,7 @@ public class DebugExercise2 {
         int i = 0;
         int sum = 0;
         while (i < x.length) {
-            sum = sum + add(sum, x[i]);
+            sum = sum + x[i];
             i = i + 1;
         }
         return sum;
