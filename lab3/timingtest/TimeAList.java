@@ -21,7 +21,26 @@ public class TimeAList {
         timeAListConstruction();
     }
 
+    private static double benchmark(int n) {
+        AList<Integer> alst = new AList<>();
+        Stopwatch sw = new Stopwatch();
+        for (int ix = 0; ix !=n; ++ix) {
+            alst.addLast(ix);
+        }
+        return sw.elapsedTime();
+    }
+
     public static void timeAListConstruction() {
-        // TODO: YOUR CODE HERE
+
+        int[] ns = { 1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000 };
+        AList<Integer> Ns = new AList<>();
+        AList<Double> times = new AList<>();
+
+        for(int n: ns) {
+            Ns.addLast(n);
+            times.addLast(benchmark(n));
+        }
+
+        printTimingTable(Ns, times, Ns);
     }
 }
